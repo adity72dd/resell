@@ -45,7 +45,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = (
         "🚀 **Welcome to the Attack Bot!** 🚀\n\n"
         "🔹 This bot allows you to launch attacks using /attack.\n"
-        "🔹 Contact me for paid services @Riyahacksyt.\n"
+        "🔹 Contact me for paid services @NARUTO_OWNERS.\n"
         "🔹 Join our channel for updates:\n"
         f"[🔗 Click Here]({CHANNEL_LINK})\n\n"
         "💻 **Developed by**: " + f"@{OWNER_USERNAME}"
