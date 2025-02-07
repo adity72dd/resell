@@ -9,7 +9,7 @@ import time
 
 USER_FILE = "users.json"
 ADMIN_FILE = "admins.json"
-DEFAULT_THREADS = 3300
+DEFAULT_THREADS = 5000
 DEFAULT_PACKET = 5
 DEFAULT_DURATION = 350  # Default attack duration
 
