@@ -9,8 +9,8 @@ import time
 
 USER_FILE = "users.json"
 ADMIN_FILE = "admins.json"
-DEFAULT_THREADS = 100
-DEFAULT_PACKET = 20
+DEFAULT_THREADS = 1700
+DEFAULT_PACKET = 45
 DEFAULT_DURATION = 350  # Default attack duration
 
 # Store the last attack time for each user (in seconds)
